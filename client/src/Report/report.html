@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charity Report</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .campaign-id {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .report-section {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .report-text {
+            flex: 1;
+            margin-right: 20px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .report-image {
+            z-index: 10;
+        }
+
+        .report-image img {
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            position: relative;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            background-color: #e9f7ef;
+            border-left: 5px solid #28a745;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .step .arrow {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left: 10px solid #28a745;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            margin-left: 10px;
+        }
+
+        .step:last-child .arrow {
+            display: none;
+        }
+
+        .thank-you {
+            font-weight: bold;
+            font-size: 18px;
+            color: #28a745;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="report-content" class="container">
+        <div class="header">
+            <h1>Charity Report</h1>
+            <p class="campaign-id">Campaign ID: 12345</p>
+        </div>
+        <div class="report-section">
+            <div class="report-text">
+                <div class="step-container">
+                    <div class="step">
+                        <p>Donor gives money to Organization (Contract)</p>
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="step">
+                        <p>Organization (Contract) distributes money to the Needy</p>
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="step">
+                        <p>Cause of Donation</p>
+                        <p>The funds collected from the donor with 0xf813fb4c33463cd8a5325d79b354fb692583664687bf6fbe89ff4f10be050127 ID were stored in the contract with address 0x2BC98e63F8F171328e4aA287BC18b3C2276e0159.
+                            From there, the funds were transferred to the account of the needy with account address 0x4b9a95105Efb75f8A254D1E0dB7153E85ed6C2A5.
+                            The transaction was approved by the donor with account address 0xf813fb4c33463cd8a5325d79b354fb692583664687bf6fbe89ff4f10be050127.</p>
+                        <div class="arrow"></div>
+                    </div>
+                    <div class="step">
+                        <p class="thank-you">Thank You from Kaushal Jha Organization</p>
+                    </div>
+                </div>
+                <p>This is the report text. It describes the activities and outcomes of the charity campaign, positioned
+                    on the left side of the page to give a detailed overview of the report's contents.</p>
+                <p>You can add more text here to elaborate on the details, explain the goals achieved, and provide any
+                    other necessary information.</p>
+            </div>
+            <div class="report-image">
+                <img src="qr.png"
+                    alt="Charity Image" crossorigin="anonymous">
+            </div>
+        </div>
+    </div>
+    <button onclick="downloadPDF()">Download as PDF</button>
+
+    <script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+
+            html2canvas(document.getElementById('report-content'), { useCORS: true }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const doc = new jsPDF();
+                const imgWidth = 190; // Full width for A4 size
+                const pageHeight = 295; // Full height for A4 size
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                doc.save('charity_report.pdf');
+            });
+        }
+    </script>
+</body>
+
+</html>
