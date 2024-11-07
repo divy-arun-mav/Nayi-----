@@ -136,7 +136,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-router.post('/create-campaign', authMiddleware(Organization), async (req, res) => {
+router.post('/create-campaign', authMiddleware([Organization]), async (req, res) => {
     const { name, description, donors, photo, totalAmtCollected, address } = req.body;
     const org = req.user;
     if (!name || !description || !address) {
@@ -154,7 +154,7 @@ router.post('/create-campaign', authMiddleware(Organization), async (req, res) =
     }
 })
 
-router.patch('/update-campaign/:id', authMiddleware(Organization), async (req, res) => {
+router.patch('/update-campaign/:id', authMiddleware([Organization]), async (req, res) => {
     const { id } = req.params;
     const updateFields = req.body;
 
@@ -173,7 +173,7 @@ router.patch('/update-campaign/:id', authMiddleware(Organization), async (req, r
     }
 })
 
-router.get('/get-campaign/:id', authMiddleware(Organization || User), async (req, res) => {
+router.get('/get-campaign/:id', authMiddleware([Organization ,User]), async (req, res) => {
     const { id } = req.params;
     try {
         const campaign = await Campaign.findById(id);
@@ -194,7 +194,7 @@ router.get('/get-campaigns', async (req, res) => {
     }
 })
 
-router.patch('/end-campaign/:id', authMiddleware(Organization), async (req, res) => {
+router.patch('/end-campaign/:id', authMiddleware([Organization]), async (req, res) => {
     const { id } = req.params;
     const updateFields = req.body;
 
@@ -241,7 +241,7 @@ router.post('/send-notification', async (req, res) => {
     }
 });
 
-router.get('/get-notification', authMiddleware, async (req, res) => {
+router.get('/get-notification', authMiddleware([Organization,User]), async (req, res) => {
     try {
         const noti = await Noti.find();
         console.log(noti);
@@ -269,7 +269,7 @@ router.get('/ongoing-campaigns', async (req, res) => {
     }
 });
 
-router.patch('/donate', authMiddleware(User), async (req, res) => {
+router.patch('/donate', authMiddleware([User]), async (req, res) => {
     const { amount, BcampaignId, campaignId, hash } = req.body;
     const userId = req.user._id;
 
@@ -314,10 +314,11 @@ router.patch('/donate', authMiddleware(User), async (req, res) => {
     }
 });
 
-router.get('/donations', authMiddleware(User), async (req, res) => {
+router.get('/donations', authMiddleware([User]), async (req, res) => {
     try {
         const userId = req.user._id;
         const user = await User.findById(userId);
+        console.log(user);
 
         if (!user) {
             return res.status(404).json({ error: "User not found" });
@@ -329,7 +330,7 @@ router.get('/donations', authMiddleware(User), async (req, res) => {
     }
 });
 
-router.patch('/complete-donation', authMiddleware(Organization), async (req, res) => {
+router.patch('/complete-donation', authMiddleware([Organization]), async (req, res) => {
     const { hash, charityId, amount } = req.body;
     const orgId = req.user._id;
 
@@ -385,7 +386,7 @@ router.get('/completions', async (req, res) => {
     }
 });
 
-router.patch('/verify-completion/:id', authMiddleware(User), async (req, res) => {
+router.patch('/verify-completion/:id', authMiddleware([User]), async (req, res) => {
     const { id } = req.params;
     const userId = req.user._id; // Assuming user authentication is verified with `authMiddleware`
 
@@ -417,7 +418,7 @@ router.patch('/verify-completion/:id', authMiddleware(User), async (req, res) =>
 
 
 
-router.get('/organization/campaigns', authMiddleware(Organization), async (req, res) => {
+router.get('/organization/campaigns', authMiddleware([Organization]), async (req, res) => {
     try {
         const organizationId = req.user._id; 
         const organization = await Organization.findById(organizationId).populate('campaigns').lean();
@@ -439,7 +440,7 @@ router.get('/organization/campaigns', authMiddleware(Organization), async (req, 
     }
 });
 
-router.get('/organization/donors', authMiddleware(Organization), async (req, res) => {
+router.get('/organization/donors', authMiddleware([Organization]), async (req, res) => {
     try {
         const users = await User.find();
         const donors = users.filter(user => user.donations.length > 0);
@@ -450,36 +451,36 @@ router.get('/organization/donors', authMiddleware(Organization), async (req, res
     }
 });
 
-router.patch('/complete-donation', authMiddleware(Organization), async (req, res) => {
-    const userId = req.user._id;
-    try {
-        const { charityId, amount, hash } = req.body;
-        const organization = await Organization.findById(req.userID);
+// router.patch('/complete-donation', authMiddleware(Organization), async (req, res) => {
+//     const userId = req.user._id;
+//     try {
+//         const { charityId, amount, hash } = req.body;
+//         const organization = await Organization.findById(req.userID);
 
-        if (!organization) {
-            return res.status(404).json({ message: "Organization not found" });
-        }
-        const newCompletion = {
-            charityId,
-            amount,
-            hash,
-            donorId:userId,
-        };
+//         if (!organization) {
+//             return res.status(404).json({ message: "Organization not found" });
+//         }
+//         const newCompletion = {
+//             charityId,
+//             amount,
+//             hash,
+//             donorId:userId,
+//         };
 
-        organization.completions.push(newCompletion);
+//         organization.completions.push(newCompletion);
 
-        await organization.save();
+//         await organization.save();
 
-        return res.status(200).json({ message: "Donation completion recorded successfully", completions: organization.completions });
-    } catch (error) {
-        console.error("Error completing donation:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
-    }
-});
+//         return res.status(200).json({ message: "Donation completion recorded successfully", completions: organization.completions });
+//     } catch (error) {
+//         console.error("Error completing donation:", error);
+//         return res.status(500).json({ error: "Internal Server Error" });
+//     }
+// });
 
 
 
-router.get('/get-all-users', authMiddleware(Organization),async (req, res) => {
+router.get('/get-all-users', authMiddleware([Organization]),async (req, res) => {
     try {
         const users = await User.find();
         return res.status(200).json({ users });
@@ -489,7 +490,7 @@ router.get('/get-all-users', authMiddleware(Organization),async (req, res) => {
     }
 })
 
-router.get('/user', authMiddleware, (req, res) => {
+router.get('/user', authMiddleware([User,Organization]), (req, res) => {
     try {
         const userData = req.user;
         res.status(200).json({ msg: userData });

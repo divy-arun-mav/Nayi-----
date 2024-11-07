@@ -33,7 +33,7 @@ const Donations = () => {
                 <ul>
                     {donations.map((donation, index) => (
                         <li key={index} className="mb-4 p-4 border rounded-lg shadow">
-                            <p><strong>Transaction Hash:</strong> {donation.hash}</p>
+                            <p><strong>Transaction Hash:</strong> <a href={`https://sepolia.etherscan.io/tx/${donation.hash}`}>{donation.hash}</a></p>
                             <p><strong>Campaign ID:</strong> {donation.BcampaignId}</p>
                             <p><strong>Amount:</strong> {donation.amount}</p>
                         </li>

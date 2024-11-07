@@ -2,28 +2,38 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Organization = require('../models/Organization');
 
-const authMiddleware = (Model) => {
+const authMiddleware = (Models) => {
+    // console.log(Models);
     return async (req, res, next) => {
         const token = req.header('Authorization');
-        console.log("Request Headers: ", req.headers);
+        // console.log(token);
+        // console.log("Request Headers: ", req.headers);
 
         if (!token) {
-            return res.status(401).json({ message: "Unauthorized HTTP, Token not provided" });
+            return res.status(401).json({ message: "Unauthorized: Token not provided" });
         }
 
         const jwtToken = token.replace(/^Bearer\s/, "").trim();
-        console.log("Token from middleware ", jwtToken);
+        // console.log("Token from middleware ", jwtToken);
 
         try {
             const isVerified = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
             console.log("Decoded Token: ", isVerified);
 
-            const userData = await Model.findOne({ _id: isVerified._id }).select({ password: 0 });
+            // Loop through Models to check which model to use
+            let userData = null;
+            for (let Model of Models) {
+                userData = await Model.findById(isVerified._id).select({ password: 0 });
+                if (userData) break;
+            }
+
+            console.log("UserData: ",userData);
 
             if (!userData) {
-                console.log("User not found");
-                return res.status(401).json({ message: "User not found" });
+                console.log("User or Organization not found");
+                return res.status(401).json({ message: "User or Organization not found" });
             }
+
             req.user = userData;
             req.token = token;
             req.userID = userData._id;
@@ -35,5 +45,7 @@ const authMiddleware = (Model) => {
         }
     };
 };
+
+
 
 module.exports = authMiddleware;

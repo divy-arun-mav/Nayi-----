@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import axios from 'axios'; 
 import { useAuth } from '../store/auth';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const CompleteDonations = () => {
     const [amount, setAmount] = useState('');
@@ -28,38 +29,33 @@ const CompleteDonations = () => {
 
                 await saveDonationDetails(transaction.hash, amount, charityId);
 
-                alert('Donation made successfully');
+                toast.success('Donation made successfully');
             } else {
-                alert('Metamask disconnected.');
+                toast.info('Metamask disconnected.');
             }
         } catch (error) {
             console.error('Error donating: ', error);
-            alert('Failed to donate.');
+            toast.error('Failed to donate.');
         }
     };
 
 
     const saveDonationDetails = async (hash, amount, charityId) => {
         try {
-            const response = await axios.patch(`${process.env.REACT_APP_BACKEND_API}/complete-donation`, {
-                hash,
-                amount,
-                charityId: charityId,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            const response = await axios.patch(
+                `${process.env.REACT_APP_BACKEND_API}/complete-donation`,
+                { hash, amount, charityId },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
                 }
-            }).then(response => {
-                console.log('Donation completed:', response.data);
-            })
-                .catch(error => {
-                    console.error('Error completing donation:', error);
-                });
-            // console.log('Donation saved:', response.data);
-            // navigate('/donations');
+            );
+            toast.success("Donation completed  ", response.data.message);
         } catch (error) {
             console.error('Error saving donation:', error);
-            alert('Failed to save donation.');
+            toast.error('Failed to save donation.');
         }
     };
 
