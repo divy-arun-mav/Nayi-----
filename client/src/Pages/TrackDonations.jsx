@@ -34,7 +34,7 @@ const TrackDonations = () => {
 
     const fetchCompletions = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/completions', {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/completions`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -50,7 +50,7 @@ const TrackDonations = () => {
 
     const handleClick = async (id) => {
         try {
-            const response = await axios.patch(`http://localhost:5000/verify-completion/${id}`, {}, {
+            const response = await axios.patch(`${process.env.REACT_APP_BACKEND_API}/verify-completion/${id}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

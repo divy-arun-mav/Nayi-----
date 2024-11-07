@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 
     const createNotification = async (title, message) => {
         try {
-            const response = await axios.post('http://localhost:5000/send-notification', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_API}/send-notification`, {
                 title,
                 message
             });

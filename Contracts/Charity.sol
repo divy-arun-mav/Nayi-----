@@ -217,3 +217,7 @@ contract CharityDonation {
         }
     }
 }
+
+
+// 0xAFFBC1E3757A8AC54B477309cf720Ae33342Dbd2  new
+// 0x2BC98e63F8F171328e4aA287BC18b3C2276e0159  old

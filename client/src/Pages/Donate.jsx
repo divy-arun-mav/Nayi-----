@@ -42,7 +42,7 @@ const Donate = () => {
 
     const saveDonationDetails = async (hash, amount, charityId) => {
         try {
-            const response = await axios.patch('http://localhost:5000/donate', {
+            const response = await axios.patch(`${process.env.REACT_APP_BACKEND_API}/donate`, {
                 hash,
                 amount,
                 BcampaignId: charityId,

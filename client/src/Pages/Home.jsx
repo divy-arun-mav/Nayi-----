@@ -17,7 +17,7 @@ const Home = () => {
       try {
         console.log(token);
         console.log('Fetching campaigns from home ...');
-        const response = await axios.get('http://localhost:5000/get-campaigns', {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/get-campaigns`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

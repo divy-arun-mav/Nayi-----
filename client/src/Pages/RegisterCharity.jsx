@@ -92,7 +92,7 @@ const RegisterCharity = () => {
         try {
             const token = localStorage.getItem('token');
 
-            const response = await axios.post('http://localhost:5000/create-campaign', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_API}/create-campaign`, {
                 name,
                 description,
                 address: charityAddress,

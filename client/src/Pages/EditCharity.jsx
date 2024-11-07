@@ -14,7 +14,7 @@ const EditCharity = () => {
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/get-campaigns', {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/get-campaigns`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -58,7 +58,7 @@ const EditCharity = () => {
 
   const handleSaveChanges = async () => {
     try {
-      await axios.patch(`http://localhost:5000/update-campaign/${editingCampaignId}`, editForm, {
+      await axios.patch(`${process.env.REACT_APP_BACKEND_API}/update-campaign/${editingCampaignId}`, editForm, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -77,7 +77,7 @@ const EditCharity = () => {
 
   const handleEndCampaign = async (id) => {
     try {
-      await axios.patch(`http://localhost:5000/end-campaign/${id}`, {}, {
+      await axios.patch(`${process.env.REACT_APP_BACKEND_API}/end-campaign/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

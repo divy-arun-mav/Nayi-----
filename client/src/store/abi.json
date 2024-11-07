@@ -25,6 +25,19 @@
         "type": "event"
     },
     {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_charityId",
+                "type": "uint256"
+            }
+        ],
+        "name": "donate",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
         "anonymous": false,
         "inputs": [
             {
@@ -94,6 +107,47 @@
         "type": "event"
     },
     {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_description",
+                "type": "string"
+            },
+            {
+                "internalType": "address payable",
+                "name": "_charityAddress",
+                "type": "address"
+            }
+        ],
+        "name": "registerCharity",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_charityId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "releaseFunds",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
         "anonymous": false,
         "inputs": [
             {
@@ -111,6 +165,37 @@
         ],
         "name": "ReportSubmitted",
         "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_charityId",
+                "type": "uint256"
+            }
+        ],
+        "name": "requestRefund",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_charityId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_report",
+                "type": "string"
+            }
+        ],
+        "name": "submitReport",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     },
     {
         "inputs": [
@@ -162,19 +247,6 @@
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_charityId",
-                "type": "uint256"
-            }
-        ],
-        "name": "donate",
-        "outputs": [],
-        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -347,24 +419,35 @@
     {
         "inputs": [
             {
-                "internalType": "string",
-                "name": "_name",
-                "type": "string"
-            },
-            {
-                "internalType": "string",
-                "name": "_description",
-                "type": "string"
-            },
-            {
-                "internalType": "address payable",
-                "name": "_charityAddress",
-                "type": "address"
+                "internalType": "uint256",
+                "name": "_charityId",
+                "type": "uint256"
             }
         ],
-        "name": "registerCharity",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "name": "getDonations",
+        "outputs": [
+            {
+                "internalType": "address[]",
+                "name": "donors",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "amounts",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "timestamps",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "bool[]",
+                "name": "refunded",
+                "type": "bool[]"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -373,47 +456,41 @@
                 "internalType": "uint256",
                 "name": "_charityId",
                 "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
             }
         ],
-        "name": "releaseFunds",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "name": "getReports",
+        "outputs": [
+            {
+                "internalType": "string[]",
+                "name": "",
+                "type": "string[]"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_charityId",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
                 "type": "uint256"
             }
         ],
-        "name": "requestRefund",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_charityId",
-                "type": "uint256"
-            },
+        "name": "reports",
+        "outputs": [
             {
                 "internalType": "string",
-                "name": "_report",
+                "name": "",
                 "type": "string"
             }
         ],
-        "name": "submitReport",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "view",
         "type": "function"
     }
 ]

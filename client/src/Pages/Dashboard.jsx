@@ -15,7 +15,7 @@ const Dashboard = () => {
         const fetchCampaigns = async () => {
             try {
                 console.log('Fetching campaigns...');
-                const response = await axios.get('http://localhost:5000/get-campaigns', {
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/get-campaigns`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -61,7 +61,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="ml-64 p-6 bg-gray-800 text-green-500 min-h-screen overflow-hidden">
+        <div className="md:ml-64 p-6 bg-gray-800 text-green-500 min-h-screen overflow-hidden">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-semibold text-green-500 h-10">My Campaigns</h1>
                 <input

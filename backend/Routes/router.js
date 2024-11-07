@@ -92,6 +92,7 @@ router.post('/register', async (req, res) => {
     const { name, type, password, description, address, email, phone } = req.body;
 
     if (!name || !password || !address || (type === "charity" && !email) || (type === "organization" && (!description || !phone))) {
+        console.log(name, type, password, description, address, email, phone);
         return res.status(422).json({ error: "Please add all required fields" });
     }
 
