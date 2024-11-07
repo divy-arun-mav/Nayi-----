@@ -91,13 +91,13 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
     const { name, type, password, description, address, email, phone } = req.body;
 
-    if (!name || !password || !address || (type === "charity" && !email) || (type === "organization" && (!description || !phone))) {
+    if (!name || !password || !address || (type === "user" && !email) || (type === "organization" && (!description || !phone))) {
         console.log(name, type, password, description, address, email, phone);
         return res.status(422).json({ error: "Please add all required fields" });
     }
 
     try {
-        if (type === "charity") {
+        if (type === "user") {
             const existingUser = await User.findOne({ name });
             if (existingUser) {
                 return res.status(422).json({ error: "User already exists with that name or email" });
