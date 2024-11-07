@@ -31,7 +31,8 @@ const Navbar = () => {
         { title: 'Donate', path: '/donate' },
         { title: 'Donations', path: '/donations' },
         { title: 'Track Donations', path: '/track-donations' },
-        { title: 'View Report', path: '/reports/:id' }
+        { title: 'View Report', path: '/reports/:id' },
+        { title: 'All Campaign', path: '/all-campaign' },
     ];
     
     const navigationOrg = [
