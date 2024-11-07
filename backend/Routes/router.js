@@ -330,61 +330,66 @@ router.get('/donations', authMiddleware([User]), async (req, res) => {
     }
 });
 
-router.patch('/complete-donation', authMiddleware([Organization]), async (req, res) => {
-    const { hash, charityId, amount } = req.body;
-    const orgId = req.user._id;
+// router.patch('/complete-donation', authMiddleware([Organization]), async (req, res) => {
+//     const { hash, charityId, amount } = req.body;
+//     const orgId = req.user._id;
 
+//     try {
+//         // Input validation
+//         if (!hash || !charityId || !amount) {
+//             return res.status(400).json({ error: "Missing required fields" });
+//         }
+
+//         // Find the organization
+//         const organization = await Organization.findById(orgId);
+//         if (!organization) {
+//             return res.status(404).json({ error: "Organization not found" });
+//         }
+
+
+//         organization.phone = 1234567890;
+
+//         // Create the completion object
+//         const completion = {
+//             hash,
+//             charityId,
+//             amount
+//         };
+
+//         // Add the completion to the organization's completions array
+//         organization.completions.push(completion);
+
+//         // Save the updated organization
+//         await organization.save();
+
+//         return res.status(200).json({ message: "Donation completion recorded successfully", completion });
+//     } catch (error) {
+//         console.error('Error completing donation:', error);
+//         return res.status(500).json({ error: "Internal server error" });
+//     }
+// });
+
+router.get('/completions', authMiddleware([User, Organization]), async (req, res) => {
     try {
-        // Input validation
-        if (!hash || !charityId || !amount) {
-            return res.status(400).json({ error: "Missing required fields" });
+        // Fetch all organizations
+        const organizations = await Organization.find();
+
+        if (!organizations || organizations.length === 0) {
+            return res.status(404).json({ message: "No organizations found" });
         }
 
-        // Find the organization
-        const organization = await Organization.findById(orgId);
-        if (!organization) {
-            return res.status(404).json({ error: "Organization not found" });
-        }
+        // Collect completions from each organization
+        const allCompletions = organizations.map(org => org.completions).flat();
 
+        console.log(allCompletions);
 
-        organization.phone = 1234567890;
-
-        // Create the completion object
-        const completion = {
-            hash,
-            charityId,
-            amount
-        };
-
-        // Add the completion to the organization's completions array
-        organization.completions.push(completion);
-
-        // Save the updated organization
-        await organization.save();
-
-        return res.status(200).json({ message: "Donation completion recorded successfully", completion });
-    } catch (error) {
-        console.error('Error completing donation:', error);
-        return res.status(500).json({ error: "Internal server error" });
-    }
-});
-
-router.get('/completions', async (req, res) => {
-    try {
-        const organization = await Organization.find();
-
-        if (!organization) {
-            return res.status(404).json({ message: "Organization not found" });
-        }
-
-        console.log(organization[0].completions);
-
-        return res.status(200).json(organization[0].completions);
+        return res.status(200).json(allCompletions);
     } catch (error) {
         console.error("Error fetching completions:", error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 });
+
 
 router.patch('/verify-completion/:id', authMiddleware([User]), async (req, res) => {
     const { id } = req.params;
@@ -451,32 +456,32 @@ router.get('/organization/donors', authMiddleware([Organization]), async (req, r
     }
 });
 
-// router.patch('/complete-donation', authMiddleware(Organization), async (req, res) => {
-//     const userId = req.user._id;
-//     try {
-//         const { charityId, amount, hash } = req.body;
-//         const organization = await Organization.findById(req.userID);
+router.patch('/complete-donation', authMiddleware([Organization]), async (req, res) => {
+    const userId = req.user._id;
+    try {
+        const { charityId, amount, hash } = req.body;
+        const organization = await Organization.findById(req.userID);
 
-//         if (!organization) {
-//             return res.status(404).json({ message: "Organization not found" });
-//         }
-//         const newCompletion = {
-//             charityId,
-//             amount,
-//             hash,
-//             donorId:userId,
-//         };
+        if (!organization) {
+            return res.status(404).json({ message: "Organization not found" });
+        }
+        const newCompletion = {
+            charityId,
+            amount,
+            hash,
+            donorId:userId,
+        };
 
-//         organization.completions.push(newCompletion);
+        organization.completions.push(newCompletion);
 
-//         await organization.save();
+        await organization.save();
 
-//         return res.status(200).json({ message: "Donation completion recorded successfully", completions: organization.completions });
-//     } catch (error) {
-//         console.error("Error completing donation:", error);
-//         return res.status(500).json({ error: "Internal Server Error" });
-//     }
-// });
+        return res.status(200).json({ message: "Donation completion recorded successfully", completions: organization.completions });
+    } catch (error) {
+        console.error("Error completing donation:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 
 

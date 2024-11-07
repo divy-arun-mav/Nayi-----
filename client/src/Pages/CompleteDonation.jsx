@@ -53,6 +53,8 @@ const CompleteDonations = () => {
                 }
             );
             toast.success("Donation completed  ", response.data.message);
+            console.log(response);
+            console.log(response.data.message);
         } catch (error) {
             console.error('Error saving donation:', error);
             toast.error('Failed to save donation.');
